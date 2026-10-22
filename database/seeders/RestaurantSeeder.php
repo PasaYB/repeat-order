@@ -26,7 +26,7 @@ class RestaurantSeeder extends Seeder
                 'phone' => '081234567801',
                 'opening_time' => '08:00:00',
                 'closing_time' => '21:00:00',
-                'image' => null,
+                'image' => 'restaurants/nusantara.png',
                 'is_open' => true,
             ],
             [
@@ -40,7 +40,7 @@ class RestaurantSeeder extends Seeder
                 'phone' => '081234567802',
                 'opening_time' => '10:00:00',
                 'closing_time' => '22:00:00',
-                'image' => null,
+                'image' => 'restaurants/ayam-bakar.png',
                 'is_open' => true,
             ],
             [
@@ -54,7 +54,7 @@ class RestaurantSeeder extends Seeder
                 'phone' => '081234567803',
                 'opening_time' => '09:00:00',
                 'closing_time' => '20:00:00',
-                'image' => null,
+                'image' => 'restaurants/bakso.png',
                 'is_open' => true,
             ],
             [
@@ -68,7 +68,7 @@ class RestaurantSeeder extends Seeder
                 'phone' => '081234567804',
                 'opening_time' => '08:00:00',
                 'closing_time' => '23:00:00',
-                'image' => null,
+                'image' => 'restaurants/kafe.png',
                 'is_open' => true,
             ],
             [
@@ -82,7 +82,7 @@ class RestaurantSeeder extends Seeder
                 'phone' => '081234567805',
                 'opening_time' => '07:00:00',
                 'closing_time' => '20:00:00',
-                'image' => null,
+                'image' => 'restaurants/bakery.png',
                 'is_open' => true,
             ],
             [
@@ -96,7 +96,7 @@ class RestaurantSeeder extends Seeder
                 'phone' => '081234567806',
                 'opening_time' => '10:00:00',
                 'closing_time' => '21:00:00',
-                'image' => null,
+                'image' => 'restaurants/minuman-segar.png',
                 'is_open' => true,
             ],
         ];
