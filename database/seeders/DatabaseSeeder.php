@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Database\Seeders\CategorySeeder;
+use Database\Seeders\MenuSeeder;
 use Database\Seeders\RestaurantSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategorySeeder::class,
             RestaurantSeeder::class,
+            MenuSeeder::class,
         ]);
     }
 }
