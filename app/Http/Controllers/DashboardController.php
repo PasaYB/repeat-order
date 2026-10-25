@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Restaurant;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -12,6 +13,9 @@ class DashboardController extends Controller
     public function index(): Response
     {
         return Inertia::render('Dashboard', [
+            'categories' => Category::query()
+                ->orderBy('name')
+                ->get(['id', 'name']),
             'restaurants' => Restaurant::with('category')
                 ->orderBy('name')
                 ->get()
