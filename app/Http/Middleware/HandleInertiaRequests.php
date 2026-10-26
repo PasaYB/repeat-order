@@ -29,11 +29,33 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $cart = $request->user()?->cart()
+            ->with([
+                'restaurant:id,name',
+                'items.menu:id,name,price',
+            ])
+            ->first();
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
+            'cartSummary' => $cart
+                ? [
+                    'restaurant' => $cart->restaurant?->only(['id', 'name']),
+                    'items' => $cart->items->map(fn ($item) => [
+                        'id' => $item->id,
+                        'name' => $item->menu->name,
+                        'quantity' => $item->quantity,
+                        'subtotal' => (float) $item->menu->price * $item->quantity,
+                    ])->values(),
+                    'item_count' => $cart->items->sum('quantity'),
+                    'total' => $cart->items->sum(
+                        fn ($item) => (float) $item->menu->price * $item->quantity
+                    ),
+                ]
+                : null,
         ];
     }
 }

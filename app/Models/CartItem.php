@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Cart;
+use App\Models\Menu;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CartItem extends Model
 {

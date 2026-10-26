@@ -1,14 +1,11 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, router } from '@inertiajs/vue3';
+import Alert from '@/Components/Alert.vue';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps({
     menus: {
-        type: Array,
-        required: true,
-    },
-    restaurants: {
         type: Array,
         required: true,
     },
@@ -18,7 +15,11 @@ const props = defineProps({
     },
 });
 
+const page = usePage();
 const quantities = ref({});
+const showReplaceAlert = ref(false);
+const replaceMessage = ref('');
+const pendingCartData = ref(null);
 
 const selectedItems = computed(() =>
     props.menus
@@ -52,12 +53,48 @@ const decreaseItem = (menu) => {
     quantities.value[menu.id] = quantity - 1;
 };
 
-const selectRestaurant = (event) => {
-    router.get(
-        route('menu'),
-        { restaurant_id: event.target.value || undefined },
-        { preserveState: false, preserveScroll: true },
-    );
+const refreshCart = () => {
+    router.reload({
+        preserveScroll: true,
+        preserveState: false,
+    });
+};
+
+function addToCart() {
+    const data = {
+        items: selectedItems.value.map((item) => ({
+            menu_id: item.id,
+            quantity: item.quantity,
+        })),
+    };
+
+    router.post(route('addToCart'), data, {
+        onError: (errors) => {
+            if (errors.cart) {
+                pendingCartData.value = data;
+                replaceMessage.value = errors.cart;
+                showReplaceAlert.value = true;
+            }
+        },
+        onSuccess: refreshCart,
+    });
+}
+
+const cancelReplace = () => {
+    showReplaceAlert.value = false;
+    pendingCartData.value = null;
+};
+
+const confirmReplace = () => {
+    router.post(route('addToCart'), {
+        ...pendingCartData.value,
+        replace_existing: true,
+    }, {
+        onSuccess: () => {
+            cancelReplace();
+            refreshCart();
+        },
+    });
 };
 </script>
 
@@ -90,7 +127,7 @@ const selectRestaurant = (event) => {
                         >
                             <article
                                 v-for="menu in menus"
-                                :key="menu.id"
+                                    :key="menu.id"
                                 class="rounded-lg bg-white p-5 shadow-sm"
                             >
                                 <div class="flex items-start justify-between gap-3">
@@ -133,6 +170,12 @@ const selectRestaurant = (event) => {
                         <h3 class="text-lg font-semibold text-gray-900">
                             Order summary
                         </h3>
+                        <p
+                            v-if="page.props.errors.items"
+                            class="mt-3 rounded-md bg-red-50 p-3 text-sm text-red-700"
+                        >
+                            {{ page.props.errors.items }}
+                        </p>
                         <div
                             v-if="selectedItems.length"
                             class="mt-4 space-y-4"
@@ -185,14 +228,9 @@ const selectRestaurant = (event) => {
                             <button
                                 type="button"
                                 class="mt-4 w-full rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-yellow-700"
+                                @click="addToCart"
                             >
-                                Add to Cart
-                            </button>
-                            <button
-                                type="button"
-                                class="mt-4 w-full rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700"
-                            >
-                                Buy Now
+                                Add to cart
                             </button>
                        </div>
                     </aside>
@@ -200,4 +238,15 @@ const selectRestaurant = (event) => {
             </div>
         </div>
     </AuthenticatedLayout>
+
+    <Alert
+        :show="showReplaceAlert"
+        title="Replace cart?"
+        :message="replaceMessage"
+        confirm-text="Replace cart"
+        cancel-text="Keep current cart"
+        variant="warning"
+        @confirm="confirmReplace"
+        @cancel="cancelReplace"
+    />
 </template>

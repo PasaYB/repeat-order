@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RestaurantController;
@@ -26,6 +27,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     Route::get('/restaurants/{restaurant:slug}', [RestaurantController::class, 'show'])->name('restaurants');
-});
+    
+    Route::get('/carts', [CartController::class, 'index'])->name('carts');
+    Route::post('/carts/items', [CartController::class, 'store'])->name('addToCart');
+    Route::patch('/carts/items/{cartItem}', [CartController::class, 'update'])->name('cartItems.update');
+    Route::delete('/carts/items/{cartItem}', [CartController::class, 'destroy'])->name('cartItems.destroy');
+    });
 
 require __DIR__.'/auth.php';
