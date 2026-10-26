@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -39,7 +40,14 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request->user()
+                    ? [
+                        ...$request->user()->toArray(),
+                        'image_url' => $request->user()->image
+                            ? Storage::disk('public')->url($request->user()->image)
+                            : null,
+                    ]
+                    : null,
             ],
             'cartSummary' => $cart
                 ? [

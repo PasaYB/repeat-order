@@ -19,7 +19,19 @@ const user = usePage().props.auth.user;
 const form = useForm({
     name: user.name,
     email: user.email,
+    image: null,
 });
+
+const submit = () => {
+    form
+        .transform((data) => ({
+            ...data,
+            _method: 'patch',
+        }))
+        .post(route('profile.update'), {
+            forceFormData: true,
+        });
+};
 </script>
 
 <template>
@@ -35,7 +47,7 @@ const form = useForm({
         </header>
 
         <form
-            @submit.prevent="form.patch(route('profile.update'))"
+            @submit.prevent="submit"
             class="mt-6 space-y-6"
         >
             <div>
@@ -67,6 +79,20 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div>
+                <InputLabel for="image" value="Profile image" />
+
+                <input
+                    id="image"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    class="mt-1 block w-full text-sm text-gray-500"
+                    @input="form.image = $event.target.files[0]"
+                />
+
+                <InputError class="mt-2" :message="form.errors.image" />
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">

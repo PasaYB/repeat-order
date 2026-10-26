@@ -10,6 +10,9 @@ import { Link, usePage } from '@inertiajs/vue3';
 const showingNavigationDropdown = ref(false);
 const page = usePage();
 const cartSummary = computed(() => page.props.cartSummary);
+const profileImage = computed(
+    () => page.props.auth.user?.image_url || '/default-profile-images/default.png',
+);
 const formatPrice = (price) =>
     `Rp ${Number(price).toLocaleString('id-ID')}`;
 </script>
@@ -62,7 +65,11 @@ const formatPrice = (price) =>
                                                 type="button"
                                                 class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                                             >
-                                                <img src="https://i.pinimg.com/736x/8a/0e/8e/8a0e8e5d792d43710d6827feac83afa6.jpg" alt="my bini" class="rounded-full size-10">
+                                                <img
+                                                    :src="profileImage"
+                                                    :alt="$page.props.auth.user.name"
+                                                    class="size-10 rounded-full object-cover"
+                                                >
 
                                                 <svg
                                                     class="-me-0.5 ms-2 h-4 w-4"
