@@ -54,6 +54,7 @@ class HandleInertiaRequests extends Middleware
                     'restaurant' => $cart->restaurant?->only(['id', 'name']),
                     'items' => $cart->items->map(fn ($item) => [
                         'id' => $item->id,
+                        'menu_id' => $item->menu_id,
                         'name' => $item->menu->name,
                         'quantity' => $item->quantity,
                         'subtotal' => (float) $item->menu->price * $item->quantity,

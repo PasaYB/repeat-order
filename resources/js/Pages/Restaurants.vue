@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Alert from '@/Components/Alert.vue';
+import QuantityInput from '@/Components/QuantityInput.vue';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
@@ -16,10 +17,36 @@ const props = defineProps({
 });
 
 const page = usePage();
-const quantities = ref({});
+const cartSummary = computed(() => page.props.cartSummary);
+const cartRestaurantId = computed(() => Number(cartSummary.value?.restaurant?.id));
+const cartQuantities = computed(() =>
+    Object.fromEntries(
+        (cartSummary.value?.items || []).map((item) => [
+            item.menu_id,
+            item.quantity,
+        ]),
+    ),
+);
+
+const cartItemIds = computed(() =>
+    Object.fromEntries(
+        (cartSummary.value?.items || []).map((item) => [
+            item.menu_id,
+            item.id,
+        ]),
+    ),
+);
+const quantities = ref(
+    cartRestaurantId.value === props.restaurant?.id
+        ? { ...cartQuantities.value }
+        : {},
+);
+
 const showReplaceAlert = ref(false);
+const showRemoveAlert = ref(false);
 const replaceMessage = ref('');
 const pendingCartData = ref(null);
+const itemToRemove = ref(null);
 
 const selectedItems = computed(() =>
     props.menus
@@ -38,51 +65,52 @@ const total = computed(() =>
 const formatPrice = (price) =>
     `Rp ${Number(price).toLocaleString('id-ID')}`;
 
-const addItem = (menu) => {
-    quantities.value[menu.id] = (quantities.value[menu.id] || 0) + 1;
-};
+const displayedQuantity = (menu) =>
+    quantities.value[menu.id] || cartQuantities.value[menu.id] || 0;
 
-const decreaseItem = (menu) => {
-    const quantity = quantities.value[menu.id] || 0;
-
-    if (quantity <= 1) {
-        delete quantities.value[menu.id];
-        return;
-    }
-
-    quantities.value[menu.id] = quantity - 1;
+const syncQuantitiesFromCart = () => {
+    quantities.value =
+        cartRestaurantId.value === props.restaurant?.id
+            ? { ...cartQuantities.value }
+            : {};
 };
 
 const refreshCart = () => {
     router.reload({
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
+        onSuccess: syncQuantitiesFromCart,
     });
+
 };
-
-function addToCart() {
-    const data = {
-        items: selectedItems.value.map((item) => ({
-            menu_id: item.id,
-            quantity: item.quantity,
-        })),
-    };
-
-    router.post(route('addToCart'), data, {
-        onError: (errors) => {
-            if (errors.cart) {
-                pendingCartData.value = data;
-                replaceMessage.value = errors.cart;
-                showReplaceAlert.value = true;
-            }
-        },
-        onSuccess: refreshCart,
-    });
-}
 
 const cancelReplace = () => {
     showReplaceAlert.value = false;
     pendingCartData.value = null;
+};
+
+const cancelRemove = () => {
+    showRemoveAlert.value = false;
+    itemToRemove.value = null;
+};
+
+const confirmRemove = () => {
+    const cartItemId = itemToRemove.value
+        ? cartItemIds.value[itemToRemove.value.id]
+        : null;
+
+    if (!cartItemId) {
+        cancelRemove();
+        return;
+    }
+
+    router.delete(route('cartItems.destroy', cartItemId), {
+        onSuccess: () => {
+            cancelRemove();
+            refreshCart();
+        },  
+    });
+        
 };
 
 const confirmReplace = () => {
@@ -95,6 +123,78 @@ const confirmReplace = () => {
             refreshCart();
         },
     });
+};
+
+const addItem = (menu) => {
+    setQuantity(menu, displayedQuantity(menu) + 1);
+};
+
+const decreaseItem = (menu) => {
+    setQuantity(menu, displayedQuantity(menu) - 1);
+};
+
+const setQuantity = (menu, value) => {
+    const nextQuantity = Number(value);
+    const previousQuantity = displayedQuantity(menu);
+    const cartItemId = cartItemIds.value[menu.id];
+
+    if (nextQuantity < 0 || nextQuantity > 99 || nextQuantity === previousQuantity) {
+        return;
+    }
+
+    if (nextQuantity === 0 && cartItemId) {
+        itemToRemove.value = menu;
+        showRemoveAlert.value = true;
+        return;
+    }
+
+    if (!cartItemId) {
+        if (nextQuantity === 0) {
+            delete quantities.value[menu.id];
+            return;
+        }
+
+        router.post(route('addToCart'), {
+            items: [{ menu_id: menu.id, quantity: nextQuantity }],
+        }, {
+            onError: (errors) => {
+                if (previousQuantity > 0) {
+                    quantities.value[menu.id] = previousQuantity;
+                } else {
+                    delete quantities.value[menu.id];
+                }
+
+                if (errors.cart) {
+                    pendingCartData.value = {
+                        items: [{ menu_id: menu.id, quantity: nextQuantity }],
+                    };
+                    replaceMessage.value = errors.cart;
+                    showReplaceAlert.value = true;
+                }
+            },
+            onSuccess: () => {
+                refreshCart();
+                quantities.value[menu.id] = nextQuantity;
+            }, 
+        });
+
+        return;
+    }
+
+    quantities.value[menu.id] = nextQuantity;
+
+    router.patch(
+        route('cartItems.update', cartItemId),
+        {
+            quantity: nextQuantity,
+        },
+        {
+            onError: () => {
+                quantities.value[menu.id] = previousQuantity;
+            },
+            onSuccess: refreshCart,
+        },
+    );
 };
 </script>
 
@@ -149,13 +249,16 @@ const confirmReplace = () => {
                                 <p class="mt-3 text-sm text-gray-600">
                                     {{ menu.description }}
                                 </p>
-                                <button
-                                    type="button"
-                                    class="mt-4 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
-                                    @click="addItem(menu)"
-                                >
-                                    Add to order
-                                </button>
+                                <div class="mt-4 flex items-center justify-end">
+                                    <div class="flex items-center gap-3">
+                                        <QuantityInput
+                                            :model-value="quantities[menu.id] ?? 0"
+                                            @increase="addItem(menu)"
+                                            @decrease="decreaseItem(menu)"
+                                            @commit="(value) => setQuantity(menu, value)"
+                                        />
+                                    </div>
+                                </div>
                             </article>
                         </div>
                         <div
@@ -186,31 +289,17 @@ const confirmReplace = () => {
                                 class="border-b border-gray-100 pb-4"
                             >
                                 <div class="flex justify-between gap-3">
-                                    <span class="font-medium text-gray-900">
-                                        {{ item.name }}
-                                    </span>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-medium text-gray-900">
+                                            {{ item.name }}
+                                        </span>
+                                        <span class="text-sm text-gray-600">
+                                            {{ item.quantity }} x
+                                        </span>
+                                    </div>
                                     <span class="font-medium text-gray-900">
                                         {{ formatPrice(item.subtotal) }}
                                     </span>
-                                </div>
-                                <div class="mt-2 flex items-center gap-3">
-                                    <button
-                                        type="button"
-                                        class="rounded border border-gray-300 px-2 text-gray-700"
-                                        @click="decreaseItem(item)"
-                                    >
-                                        -
-                                    </button>
-                                    <span class="text-sm text-gray-600">
-                                        {{ item.quantity }}
-                                    </span>
-                                    <button
-                                        type="button"
-                                        class="rounded border border-gray-300 px-2 text-gray-700"
-                                        @click="addItem(item)"
-                                    >
-                                        +
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -224,15 +313,6 @@ const confirmReplace = () => {
                             <span>Total</span>
                             <span>{{ formatPrice(total) }}</span>
                         </div>
-                        <div v-if="selectedItems.length">
-                            <button
-                                type="button"
-                                class="mt-4 w-full rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-yellow-700"
-                                @click="addToCart"
-                            >
-                                Add to cart
-                            </button>
-                       </div>
                     </aside>
                 </div>
             </div>
@@ -249,4 +329,19 @@ const confirmReplace = () => {
         @confirm="confirmReplace"
         @cancel="cancelReplace"
     />
+
+    <Alert
+        :show="showRemoveAlert"
+        :message="
+            itemToRemove
+                ? `All ${itemToRemove.name} will be removed from your cart.`
+                : ''
+        "
+        title="Remove from cart?"
+        confirm-text="Remove"
+        cancel-text="Cancel"
+        variant="danger"
+        @confirm="confirmRemove"
+        @cancel="cancelRemove"
+        />
 </template>
