@@ -53,7 +53,7 @@ const filteredRestaurants = computed(() => {
                             class="rounded-full px-4 py-2 text-sm font-medium transition"
                             :class="
                                 selectedCategory === null
-                                    ? 'bg-indigo-600 text-white'
+                                    ? 'bg-shopee text-white'
                                     : 'bg-white text-gray-700 ring-1 ring-gray-300 hover:bg-gray-50'
                             "
                             @click="selectedCategory = null"
@@ -67,7 +67,7 @@ const filteredRestaurants = computed(() => {
                             class="rounded-full px-4 py-2 text-sm font-medium transition"
                             :class="
                                 selectedCategory === category.id
-                                    ? 'bg-indigo-600 text-white'
+                                    ? 'bg-shopee text-white'
                                     : 'bg-white text-gray-700 ring-1 ring-gray-300 hover:bg-gray-50'
                             "
                             @click="selectedCategory = category.id"
@@ -83,7 +83,7 @@ const filteredRestaurants = computed(() => {
                         <article
                             v-for="restaurant in filteredRestaurants"
                             :key="restaurant.id"
-                            class="overflow-hidden rounded-lg bg-white shadow-sm"
+                            class="overflow-hidden rounded-lg p-4 bg-white shadow-sm hover:bg-gray-100 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]"
                         >
                             <Link
                                 :href="route('restaurants', restaurant.slug)
@@ -93,7 +93,7 @@ const filteredRestaurants = computed(() => {
                                         v-if="restaurant.image_url"
                                         :src="restaurant.image_url"
                                         :alt="restaurant.name"
-                                        class="h-full w-full object-cover"
+                                        class="h-full w-full object-cover rounded-lg"
                                     />
                                     <div
                                         v-else
@@ -103,7 +103,7 @@ const filteredRestaurants = computed(() => {
                                     </div>
                                 </div>
 
-                                <div class="p-5">
+                                <div class="p-2 mt-4">
                                     <div class="mb-2 flex items-start justify-between gap-3">
                                         <h4 class="text-lg font-semibold text-gray-900">
                                             {{ restaurant.name }}
@@ -122,7 +122,7 @@ const filteredRestaurants = computed(() => {
 
                                     <p
                                         v-if="restaurant.category"
-                                        class="mb-2 text-sm font-medium text-indigo-600"
+                                        class="mb-2 text-sm font-medium text-shopee"
                                     >
                                         {{ restaurant.category.name }}
                                     </p>

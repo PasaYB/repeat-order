@@ -31,7 +31,7 @@ const formatPrice = (price) =>
                             <div class="flex shrink-0 items-center">
                                 <Link :href="route('dashboard')">
                                     <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
+                                        class="block h-[1.25rem] w-auto fill-current text-shopee"
                                     />
                                 </Link>
                             </div>
@@ -152,7 +152,7 @@ const formatPrice = (price) =>
                             class="group fixed inset-x-4 bottom-4 z-50 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-96"
                         >
                             <div
-                                class="flex items-center gap-3 rounded-2xl bg-indigo-600 p-3 text-white shadow-xl shadow-indigo-900/30 ring-1 ring-white/10 transition duration-200 group-hover:-translate-y-0.5 group-hover:bg-indigo-700 group-active:scale-[0.98]"
+                                class="flex items-center gap-3 rounded-2xl bg-shopee p-3 text-white shadow-xl shadow-indigo-900/30 ring-1 ring-white/10 transition duration-200 group-hover:-translate-y-0.5 group-active:scale-[0.98]"
                             >
                                 <div class="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/15">
                                     <svg
@@ -170,7 +170,7 @@ const formatPrice = (price) =>
                                         />
                                     </svg>
                                     <span
-                                        class="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-400 px-1 text-xs font-bold text-amber-950 ring-2 ring-indigo-600"
+                                        class="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-400 px-1 text-xs font-bold text-amber-950"
                                     >
                                         {{ cartSummary.item_count }}
                                     </span>

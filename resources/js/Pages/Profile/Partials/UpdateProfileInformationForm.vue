@@ -83,15 +83,29 @@ const submit = () => {
 
             <div>
                 <InputLabel for="image" value="Profile image" />
+                
+                <label
+                    for="image"
+                    class="inline-flex max-w-full cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium shadow-sm transition focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2"
+                    :class="
+                        form.image
+                            ? 'border-green-300 bg-green-50 text-green-700 hover:bg-green-100'
+                            : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                    "
+                >
+                    <span class="truncate">
+                        {{ form.image ? form.image.name : 'Choose file' }}
+                    </span>
+                </label>
 
                 <input
                     id="image"
+                    ref="fileInput"
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
-                    class="mt-1 block w-full text-sm text-gray-500"
-                    @input="form.image = $event.target.files[0]"
+                    class="sr-only"
+                    @change="form.image = $event.target.files[0] ?? null"
                 />
-
                 <InputError class="mt-2" :message="form.errors.image" />
             </div>
 
