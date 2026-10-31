@@ -43,11 +43,11 @@ const filteredRestaurants = computed(() => {
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="mb-6">
-                    <h3 class="mb-4 text-lg font-semibold text-gray-900">
+                    <h3 class="px-4 sm:px-0 mb-4 text-lg font-semibold text-gray-900">
                         Restaurants
                     </h3>
 
-                    <div class="mb-6 flex flex-wrap gap-2">
+                    <div class="px-4 sm:px-0 mb-6 flex flex-wrap gap-2">
                         <button
                             type="button"
                             class="rounded-full px-4 py-2 text-sm font-medium transition"

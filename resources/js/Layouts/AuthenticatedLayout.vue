@@ -15,6 +15,10 @@ const profileImage = computed(
 );
 const formatPrice = (price) =>
     `Rp ${Number(price).toLocaleString('id-ID')}`;
+
+const showCartBar = computed(
+    () => cartSummary.value?.item_count > 0 && !page.props.hideCartBar,
+);
 </script>
 
 <template>
@@ -45,6 +49,12 @@ const formatPrice = (price) =>
                                     :active="route().current('dashboard')"
                                 >
                                     Dashboard
+                                </NavLink>
+                                <NavLink
+                                    :href="route('orders.index')"
+                                    :active="route().current('orders.*')"
+                                >
+                                    My Orders
                                 </NavLink>
                                 <NavLink
                                     :href="route('profile.edit')"
@@ -147,7 +157,7 @@ const formatPrice = (price) =>
                         </div>
 
                         <Link
-                            v-if="cartSummary?.item_count"
+                            v-if="cartSummary?.item_count && showCartBar"
                             :href="route('carts')"
                             class="group fixed inset-x-4 bottom-4 z-50 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-96"
                         >
@@ -239,6 +249,12 @@ const formatPrice = (price) =>
                             :active="route().current('profile.edit')"
                         >
                             Profile
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('orders.index')"
+                            :active="route().current('orders.*')"
+                        >
+                            Orders
                         </ResponsiveNavLink>
                     </div>
 
