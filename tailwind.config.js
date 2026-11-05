@@ -13,10 +13,13 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Outfit', ...defaultTheme.fontFamily.sans],
+                xmind: ['Xmind', 'sans-serif'],
+                playwrite: ['Playwrite IT Trad', 'sans-serif'],
             },
             colors: {
-                shopee: '#ca6105',
+                shopee: '#EE5001',
+                acidlime: '#C8FD03'
         },
         },
     },
