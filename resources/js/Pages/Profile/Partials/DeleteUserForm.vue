@@ -5,7 +5,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, Link } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 
 const confirmingUserDeletion = ref(false);
@@ -44,15 +44,31 @@ const closeModal = () => {
             <h2 class="text-lg font-medium text-gray-900">
                 Delete Account
             </h2>
-
+            
             <p class="mt-1 text-sm text-gray-600">
                 Once your account is deleted, all of its resources and data will
                 be permanently deleted. Before deleting your account, please
                 download any data or information that you wish to retain.
             </p>
         </header>
-
         <DangerButton @click="confirmUserDeletion">Delete Account</DangerButton>
+        
+        <header>
+            <h2 class="text-lg font-medium text-gray-900">
+                Log Out
+            </h2>
+            
+            <p class="mt-1 text-sm text-gray-600">
+                Ready to head out? Don't worry, we'll keep everything safe until you return.
+            </p>
+        </header>
+        <Link
+            :href="route('logout')"
+            method="post"
+            as="button"
+        >
+            <DangerButton>Log Out</DangerButton>
+        </Link>
 
         <Modal :show="confirmingUserDeletion" @close="closeModal">
             <div class="p-6">
