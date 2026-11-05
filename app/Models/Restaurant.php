@@ -30,7 +30,30 @@ class Restaurant extends Model
             'latitude' => 'float',
             'longitude' => 'float',
             'is_open' => 'boolean',
+            'rating' => 'float',
         ];
+    }
+
+    public function isCurrentlyOpen(): bool
+    {
+        if (!$this->is_open || !$this->opening_time || !$this->closing_time) {
+            return false;
+        }
+
+        $now = now(config('app.timezone'))->format('H:i:s');
+
+        $opening = $this->opening_time;
+        $closing = $this->closing_time;
+
+        if ($opening === $closing) {
+            return false;
+        }
+
+        if ($opening < $closing) {
+            return $now >= $opening && $now < $closing;
+        }
+
+        return $now >= $opening || $now < $closing;
     }
 
     public function category(): BelongsTo
