@@ -1,6 +1,7 @@
 <script setup>
 import Alert from '@/Components/Alert.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -32,6 +33,10 @@ const updateQuantity = (item, quantity) => {
     });
 };
 
+const goToCheckout = () => {
+    router.get(route('checkout'));
+};
+
 const removeItem = (item) => {
     itemToRemove.value = item;
     showRemoveAlert.value = true;
@@ -59,7 +64,7 @@ const confirmRemove = () => {
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="pb-12">
             <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
                 <section class="rounded-lg bg-white p-6 shadow-sm">
                     <div v-if="cart?.items?.length">
@@ -115,6 +120,13 @@ const confirmRemove = () => {
                                 {{ formatPrice(cart.items.reduce((sum, item) => sum + item.menu.price * item.quantity, 0)) }}
                             </span>
                         </div>
+                        <PrimaryButton
+                            class="mt-6 w-full justify-center"
+                            type="button"
+                            @click="goToCheckout"
+                        >
+                            Checkout Now
+                        </PrimaryButton>
                     </div>
                     <p v-else class="text-gray-600">
                         Your cart is empty.
