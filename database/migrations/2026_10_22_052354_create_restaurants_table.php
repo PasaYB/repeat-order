@@ -29,6 +29,9 @@ return new class extends Migration
             $table->string('phone', 20)->nullable();
             $table->time('opening_time')->nullable();
             $table->time('closing_time')->nullable();
+            
+            $table->decimal('rating', 2, 1)->default(0);
+            $table->unsignedInteger('reviews_count')->default(0);
 
             $table->string('image')->nullable();
             $table->boolean('is_open')->default(true);

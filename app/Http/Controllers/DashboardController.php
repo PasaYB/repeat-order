@@ -15,7 +15,7 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'categories' => Category::query()
                 ->orderBy('name')
-                ->get(['id', 'name']),
+                ->get(['id', 'name','icon']),
             'restaurants' => Restaurant::with('category')
                 ->orderBy('name')
                 ->get()

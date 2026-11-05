@@ -16,12 +16,18 @@ defineProps({
 });
 
 const form = useForm({
-    email: '',
+    email: localStorage.getItem('remembered_email') ?? '',
     password: '',
-    remember: false,
+    remember: !!localStorage.getItem('remembered_email'),
 });
 
 const submit = () => {
+    if (form.remember) {
+        localStorage.setItem('remembered_email', form.email);
+    } else {
+        localStorage.removeItem('remembered_email');
+    }
+
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
     });

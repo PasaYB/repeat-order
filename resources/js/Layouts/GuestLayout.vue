@@ -9,7 +9,7 @@ import { Link } from '@inertiajs/vue3';
     >
     <div class="absolute aspect-[2/1] w-full rounded-t-full -bottom-[40rem] bg-shopee"/>
 
-    <div class="flex flex-col mt-6 w-full items-center overflow-hidden bg-white/50 backdrop-blur-md sm:max-w-lg px-6 py-4 z-20 shadow-2xl sm:rounded-2xl">
+    <div class="flex flex-col mt-6 w-full items-center overflow-hidden bg-white/10 backdrop-blur-xl border border-white/20 sm:max-w-lg px-6 py-4 z-20 shadow-2xl sm:rounded-2xl">
         <img src="nasgor.png" alt="nasgor" class="size-40">
         
         <div

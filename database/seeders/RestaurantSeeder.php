@@ -28,6 +28,8 @@ class RestaurantSeeder extends Seeder
                 'closing_time' => '21:00:00',
                 'image' => 'restaurants/nusantara.png',
                 'is_open' => true,
+                'rating' => 4.9,
+                'reviews_count' => 98,
             ],
             [
                 'category' => 'ayam-dan-bebek',
@@ -42,6 +44,8 @@ class RestaurantSeeder extends Seeder
                 'closing_time' => '22:00:00',
                 'image' => 'restaurants/ayam-bakar.png',
                 'is_open' => true,
+                'rating' => 4.8,
+                'reviews_count' => 540,
             ],
             [
                 'category' => 'bakso-dan-mi',
@@ -56,6 +60,8 @@ class RestaurantSeeder extends Seeder
                 'closing_time' => '20:00:00',
                 'image' => 'restaurants/bakso.png',
                 'is_open' => true,
+                'rating' => 4.7,
+                'reviews_count' => 140,
             ],
             [
                 'category' => 'kopi-dan-kafe',
@@ -70,6 +76,8 @@ class RestaurantSeeder extends Seeder
                 'closing_time' => '23:00:00',
                 'image' => 'restaurants/kafe.png',
                 'is_open' => true,
+                'rating' => 4.9,
+                'reviews_count' => 67,
             ],
             [
                 'category' => 'roti-dan-dessert',
@@ -84,6 +92,8 @@ class RestaurantSeeder extends Seeder
                 'closing_time' => '20:00:00',
                 'image' => 'restaurants/bakery.png',
                 'is_open' => true,
+                'rating' => 4.5,
+                'reviews_count' => 200,
             ],
             [
                 'category' => 'minuman',
@@ -98,6 +108,8 @@ class RestaurantSeeder extends Seeder
                 'closing_time' => '21:00:00',
                 'image' => 'restaurants/minuman-segar.png',
                 'is_open' => true,
+                'rating' => 5.0,
+                'reviews_count' => 4,
             ],
         ];
 

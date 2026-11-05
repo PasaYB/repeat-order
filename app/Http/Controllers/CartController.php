@@ -24,6 +24,24 @@ class CartController extends Controller
 
         return Inertia::render('Cart', [
             'cart' => $cart,
+            'hideCartBar' => true
+        ]);
+    }
+
+    public function checkout(): Response
+    {
+        $cart = auth()->user()->cart()
+            ->with([
+                'restaurant:id,name,address',
+                'items.menu:id,name,price,image',
+            ])
+            ->first();
+
+        abort_if(! $cart || ! $cart->items->isNotEmpty(), 404, 'Your cart is empty.');
+
+        return Inertia::render('Checkout', [
+            'cart' => $cart,
+            'hideCartBar' => true,
         ]);
     }
 

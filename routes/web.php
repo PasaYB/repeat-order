@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,8 +31,13 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/carts', [CartController::class, 'index'])->name('carts');
     Route::post('/carts/items', [CartController::class, 'store'])->name('addToCart');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
     Route::patch('/carts/items/{cartItem}', [CartController::class, 'update'])->name('cartItems.update');
     Route::delete('/carts/items/{cartItem}', [CartController::class, 'destroy'])->name('cartItems.destroy');
+
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     });
 
 require __DIR__.'/auth.php';
