@@ -318,7 +318,7 @@ const setQuantity = (menu, value) => {
                         </div>
                         <PrimaryButton
                             v-if="selectedItems.length"
-                            class="mt-8 w-full text-center"
+                            class="mt-6 w-full justify-center"
                             type="button"
                             :disabled="!selectedItems.length"
                             @click="goToCheckout"

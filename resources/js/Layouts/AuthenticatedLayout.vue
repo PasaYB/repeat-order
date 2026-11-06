@@ -56,6 +56,16 @@ const showCartBar = computed(
                             </svg>
                         </NavLink>
                         <NavLink
+                            :href="route('restaurants.index')"
+                            :active="route().current('restaurants.index') || route().current('restaurants.show')"
+                            text = "Restaurants"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                                <path d="M0 0h24v24H0z" fill="none" />
+                                <path fill="currentColor" d="M12 10h-2V3H8v7H6V3H4v8c0 1.654 1.346 3 3 3h1v7h2v-7h1c1.654 0 3-1.346 3-3V3h-2zm7-7h-1c-1.159 0-2 1.262-2 3v8h2v7h2V4a1 1 0 0 0-1-1" />
+                            </svg>
+                        </NavLink>
+                        <NavLink
                             :href="route('carts')"
                             :active="route().current('carts')"
                             text = "Carts"
