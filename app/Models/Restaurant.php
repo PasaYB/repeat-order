@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Menu;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -34,7 +35,9 @@ class Restaurant extends Model
         ];
     }
 
-    public function isCurrentlyOpen(): bool
+    protected $appends = ['is_currently_open'];
+
+    public function checkOpen(): bool
     {
         if (!$this->opening_time || !$this->closing_time) {
             return false;
@@ -54,6 +57,11 @@ class Restaurant extends Model
         }
 
         return $now >= $opening || $now < $closing;
+    }
+
+    protected function isCurrentlyOpen(): Attribute
+    {
+        return Attribute::get(fn () => $this->checkOpen());
     }
 
     public function category(): BelongsTo
