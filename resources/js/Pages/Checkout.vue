@@ -4,7 +4,9 @@ import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
+import { useUserLocation } from '@/composables/useUserLocation';
+import { calculateDeliveryFee } from '@/utils/delivery';
 
 const props = defineProps({
     cart: {
@@ -13,7 +15,13 @@ const props = defineProps({
     },
 });
 
-const deliveryFee = 10000;
+const { position, locate } = useUserLocation();
+onMounted(() => locate());
+
+const delivery = computed(() => calculateDeliveryFee(position.value, props.cart.restaurant));
+const deliveryFee = computed(() => delivery.value.fee);
+const deliveryDistance = computed(() => delivery.value.distance != null ? Math.ceil(delivery.value.distance) : null)
+
 const form = useForm({
     recipient_name: '',
     recipient_phone: '',
@@ -27,6 +35,8 @@ const subtotal = computed(() =>
         0,
     ),
 );
+
+const tax = subtotal.value * 0.11;
 
 const formatPrice = (price) =>
     `Rp ${Number(price).toLocaleString('id-ID')}`;
@@ -176,18 +186,28 @@ const placeOrder = () => {
                                     {{ formatPrice(Number(item.menu.price) * item.quantity) }}
                                 </span>
                             </div>
+                        </div>
+                        <div class="border-t pt-4">
                             <div class="flex justify-between gap-4 border-b border-gray-100 pb-3">
                                 <p class="font-medium text-gray-900">
-                                    Delivery Fee
+                                    Delivery Fee <span class="text-shopee">({{ deliveryDistance + " km" }})</span>
                                 </p>
                                 <span class="font-medium text-gray-900">
                                     {{ formatPrice(deliveryFee) }}
                                 </span>
                             </div>
-                        </div>
-                        <div class="mt-4 flex justify-between border-t pt-4 font-bold text-gray-900">
-                            <span>Total</span>
-                            <span>{{ formatPrice(subtotal + deliveryFee) }}</span>
+                            <div class="flex justify-between gap-4 border-b border-gray-100 pb-3">
+                                <p class="font-medium text-gray-900">
+                                    PPn <span class="text-shopee">(11%)</span>
+                                </p>
+                                <span class="font-medium text-gray-900">
+                                    {{ formatPrice(tax) }}
+                                </span>
+                            </div>
+                            <div class="mt-4 flex justify-between pt-4 font-bold text-gray-900">
+                                <span>Total</span>
+                                <span>{{ formatPrice(subtotal + deliveryFee + tax) }}</span>
+                            </div>
                         </div>
                         <PrimaryButton
                             type="submit"
