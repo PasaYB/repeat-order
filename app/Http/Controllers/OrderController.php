@@ -47,6 +47,9 @@ class OrderController extends Controller
             $subtotal = $cart->items->sum(
                 fn ($item) => (float) $item->menu->price * $item->quantity
             );
+            $tax = $subtotal * 0.11;
+
+            $subtotal = $subtotal + $tax;
 
             $order = Order::create([
                 'order_number' => 'ORD-'.now()->format('YmdHis').'-'.Str::upper(Str::random(5)),
