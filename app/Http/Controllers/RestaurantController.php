@@ -26,6 +26,7 @@ class RestaurantController extends Controller
                     'image_url' => $restaurant->image
                         ? Storage::url($restaurant->image)
                         : null,
+                    'is_currently_open' => $restaurant->isCurrentlyOpen(),
                 ]),
             'search' => $search,
         ]);

@@ -36,7 +36,7 @@ class Restaurant extends Model
 
     public function isCurrentlyOpen(): bool
     {
-        if (!$this->is_open || !$this->opening_time || !$this->closing_time) {
+        if (!$this->opening_time || !$this->closing_time) {
             return false;
         }
 
