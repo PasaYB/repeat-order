@@ -2,9 +2,11 @@
 import ImageSlider from '@/Components/ImageSlider.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { computed, ref, toRef } from 'vue';
+import { computed, ref } from 'vue';
 import SearchBar from '@/Components/SearchBar.vue';
 import StarRating from '@/Components/StarRating.vue';
+import LocationCard from '@/Components/LocationCard.vue';
+import { getGreeting } from '@/composables/greetings';
 
 const props = defineProps({
     categories: {
@@ -16,6 +18,8 @@ const props = defineProps({
         required: true,
     },
 });
+
+const greeting = getGreeting();
 
 const selectedCategory = ref(null);
 
@@ -43,17 +47,18 @@ const filteredRestaurants = computed(() => {
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout>
-        <!-- <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800"
-            >
-                Welcome, {{ $page.props.auth.user.name }}
-            </h2>
-        </template> -->
-        
+    <AuthenticatedLayout>    
         <div class="pb-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="flex flex-col items-center gap-8 rounded-3xl bg-white/60 p-6 shadow-md ring-1 ring-gray-200 backdrop-blur-md md:flex-row md:justify-between md:gap-12 md:p-10"
+                >
+                    <h2
+                        class="text-xl font-semibold leading-tight text-gray-800"
+                    >
+                        <span class="text-shopee">Hi {{ $page.props.auth.user.name }}!</span> {{ greeting }}
+                    </h2>
+                    <LocationCard class="w-full md:w-auto" />
+                </div>
                 <ImageSlider/>
                 <SearchBar @search="searchRestaurants" />
                 <div class="mb-6 p-4 rounded-3xl">
