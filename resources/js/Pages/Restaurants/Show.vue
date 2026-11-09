@@ -3,8 +3,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Alert from '@/Components/Alert.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import QuantityInput from '@/Components/QuantityInput.vue';
+import StarRating from '@/Components/StarRating.vue';
 import { Head, router, usePage, Link } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import { useUserLocation } from '@/composables/useUserLocation';
+import { distanceKm } from '@/utils/delivery';
 
 const props = defineProps({
     menus: {
@@ -86,7 +89,6 @@ const refreshCart = () => {
         preserveState: true,
         onSuccess: syncQuantitiesFromCart,
     });
-
 };
 
 const cancelReplace = () => {
@@ -201,37 +203,86 @@ const setQuantity = (menu, value) => {
         },
     );
 };
+
+const { position, locate } = useUserLocation();
+
+onMounted(() => locate());
+
+const restaurantDistance = computed(() => {
+    if (
+        !position.value ||
+        props.restaurant?.latitude == null ||
+        props.restaurant?.longitude == null
+    ) {
+        return null;
+    }
+
+    return Math.ceil(distanceKm(position.value, [
+        props.restaurant.latitude,
+        props.restaurant.longitude,
+    ]));
+});
 </script>
 
 <template>
     <Head title="Menu" />
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Menu
-            </h2>
-        </template>
-
-        <div class="px-8 py-12 sm:px-0">   
+        <div class="px-8 pb-12 sm:px-0">   
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                    <div>
-                        <p class="text-sm text-gray-500">Restaurant</p>
-                        <h3 class="mt-1 text-2xl font-bold text-gray-900">
-                            {{ restaurant.name }}
-                        </h3>
+                <div class="flex flex-col rounded-3xl bg-white/60 shadow-md backdrop-blur-md ring-1 ring-gray-200 mb-8 p-10">
+                    <div class="flex flex-col gap-4 md:items-center md:flex-row md:justify-between mb-8">
+                        <div>
+                            <p class="text-sm text-gray-500">Restaurant</p>
+                            <h3 class="my-1 text-2xl font-bold text-gray-900">
+                                {{ restaurant.name }}
+                            </h3>
+                            <p class="text-shopee">{{ restaurant.description }}</p>
+                        </div>
+                        
+                        <div>
+                            <div class="flex flex-col md:items-center gap-1.5 text-sm">
+                                <StarRating :rating="restaurant.rating" />
+                                <div class="space-x-2">
+                                    <span class="font-semibold text-gray-800">{{ restaurant.rating.toFixed(1) }}</span>
+                                    <span class="text-gray-500">({{ restaurant.reviews_count }} ulasan)</span>
+                                </div>
+                            </div>       
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4 sm:flex-row sm:justify-between">
+                        <p class="flex text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" class="mt-1 mx-1" viewBox="0 0 24 24">
+                                <path d="M0 0h24v24H0z" fill="none" />
+                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="m15 16l-2.414-2.414A2 2 0 0 1 12 12.172V6" />
+                                </g>
+                            </svg> Buka dari jam <span class="text-shopee mx-1">{{ restaurant.opening_time }} - {{ restaurant.closing_time }}</span>
+                        </p>
+                        <p class="flex text-sm text-shopee gap-1">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z" />
+                                <circle cx="12" cy="9" r="2.5" />
+                            </svg>
+                            {{ restaurantDistance }} Km
+                        </p>
                     </div>
                 </div>
-                <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-                    <section>
+                <div 
+                class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]"
+                :class="{ 'pointer-events-none select-none opacity-60 grayscale': !restaurant.is_currently_open }"
+                :inert="!restaurant.is_currently_open"
+                >
+                    <section
+                    >
                         <div
                             v-if="menus.length"
-                            class="grid gap-4 sm:grid-cols-2"
+                            class="grid gap-4 grid-cols-1"
                         >
                             <article
                                 v-for="menu in menus"
-                                    :key="menu.id"
-                                class="rounded-lg bg-white p-5 shadow-sm"
+                                :key="menu.id"
+                                class="bg-white/60 shadow-md backdrop-blur-md p-6 rounded-3xl"
                             >
                                 <div class="flex items-start justify-between gap-3">
                                     <div>
@@ -245,7 +296,7 @@ const setQuantity = (menu, value) => {
                                             {{ menu.restaurant.name }}
                                         </p>
                                     </div>
-                                    <span class="whitespace-nowrap font-semibold text-gray-900">
+                                    <span class="whitespace-nowrap font-semibold text-shopee">
                                         {{ formatPrice(menu.price) }}
                                     </span>
                                 </div>
@@ -272,7 +323,7 @@ const setQuantity = (menu, value) => {
                         </div>
                     </section>
 
-                    <aside class="h-fit rounded-lg bg-white p-5 shadow-sm lg:sticky lg:top-6 mb-16 sm:mb-0">
+                    <section class="h-full border-l border-gray-300 p-5 lg:sticky lg:top-6 mb-16 sm:mb-0 bg-white/60 shadow-md backdrop-blur-md rounded-3xl">
                         <h3 class="text-lg font-semibold text-gray-900">
                             Order summary
                         </h3>
@@ -325,7 +376,7 @@ const setQuantity = (menu, value) => {
                         >
                             Checkout Now
                         </PrimaryButton>
-                    </aside>
+                    </section>
                 </div>
                 <div class="mt-6 flex items-center justify-between text-sm">
                     <Link
