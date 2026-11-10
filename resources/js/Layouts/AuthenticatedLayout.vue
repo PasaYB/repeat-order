@@ -67,7 +67,7 @@ const showCartBar = computed(
                         </NavLink>
                         <NavLink
                             :href="route('carts')"
-                            :active="route().current('carts')"
+                            :active="route().current('carts') || route().current('checkout')"
                             text = "Carts"
                         >
                             <svg
