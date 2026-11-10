@@ -56,8 +56,18 @@ const showCartBar = computed(
                             </svg>
                         </NavLink>
                         <NavLink
+                            :href="route('restaurants.index')"
+                            :active="route().current('restaurants.index') || route().current('restaurants.show')"
+                            text = "Restaurants"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                                <path d="M0 0h24v24H0z" fill="none" />
+                                <path fill="currentColor" d="M12 10h-2V3H8v7H6V3H4v8c0 1.654 1.346 3 3 3h1v7h2v-7h1c1.654 0 3-1.346 3-3V3h-2zm7-7h-1c-1.159 0-2 1.262-2 3v8h2v7h2V4a1 1 0 0 0-1-1" />
+                            </svg>
+                        </NavLink>
+                        <NavLink
                             :href="route('carts')"
-                            :active="route().current('carts')"
+                            :active="route().current('carts') || route().current('checkout')"
                             text = "Carts"
                         >
                             <svg
@@ -106,7 +116,7 @@ const showCartBar = computed(
                                      <span
                                         class="pointer-events-none absolute left-1/2 top-[80%] z-50 mt-2 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-md bg-shopee px-2.5 py-1 text-xs font-medium text-white opacity-0 shadow-lg transition duration-150 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
                                     >
-                                        Hi {{ $page.props.auth.user.name }}, tap for edit profile
+                                        Tap for edit profile
                                     </span>
                                 </Link>
                             </span>

@@ -45,7 +45,7 @@ const commit = async () => {
     <div class="inline-flex items-center gap-1">
         <button
             type="button"
-            class="rounded border border-gray-300 px-3 py-1 text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+            class="rounded border border-gray-300 px-3 py-1 text-shopee transition hover:bg-gray-50 disabled:opacity-50"
             :disabled="disabled || modelValue <= min"
             aria-label="Kurangi"
             @click="emit('decrease')"
@@ -61,7 +61,7 @@ const commit = async () => {
             maxlength="3"
             :disabled="disabled"
             aria-label="Jumlah"
-            class="w-12 rounded border border-gray-300 px-1 py-1 text-center text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
+            class="w-12 rounded border border-gray-300 bg-transparent px-1 py-1 text-center text-gray-900 focus:border-shopee focus:outline-none focus:ring-1 focus:ring-shopee/50 disabled:opacity-50"
             @input="onInput"
             @focus="$event.target.select()"
             @blur="commit"
@@ -70,7 +70,7 @@ const commit = async () => {
 
         <button
             type="button"
-            class="rounded border border-gray-300 px-3 py-1 text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+            class="rounded border border-gray-300 px-3 py-1 text-shopee transition hover:bg-gray-50 disabled:opacity-50"
             :disabled="disabled || modelValue >= max"
             aria-label="Tambah"
             @click="emit('increase')"

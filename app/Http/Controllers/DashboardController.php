@@ -17,7 +17,10 @@ class DashboardController extends Controller
                 ->orderBy('name')
                 ->get(['id', 'name','icon']),
             'restaurants' => Restaurant::with('category')
+                ->orderByDesc('reviews_count')
+                ->orderByDesc('rating')
                 ->orderBy('name')
+                ->take(6)
                 ->get()
                 ->map(fn (Restaurant $restaurant) => [
                     ...$restaurant->toArray(),

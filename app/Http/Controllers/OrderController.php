@@ -32,6 +32,7 @@ class OrderController extends Controller
             'recipient_name' => ['required', 'string', 'max:255'],
             'recipient_phone' => ['required', 'string', 'max:20'],
             'delivery_address' => ['required', 'string'],
+            'delivery_fee' => ['required', 'integer', 'min:0'],
             'notes' => ['nullable', 'string'],
         ]);
 
@@ -43,10 +44,14 @@ class OrderController extends Controller
 
             abort_if($cart->items->isEmpty(), 422, 'Your cart is empty.');
 
-            $deliveryFee = 10000;
+            $deliveryFee = $validated['delivery_fee'];
+
             $subtotal = $cart->items->sum(
                 fn ($item) => (float) $item->menu->price * $item->quantity
             );
+            $tax = $subtotal * 0.11;
+
+            $subtotal = $subtotal + $tax;
 
             $order = Order::create([
                 'order_number' => 'ORD-'.now()->format('YmdHis').'-'.Str::upper(Str::random(5)),

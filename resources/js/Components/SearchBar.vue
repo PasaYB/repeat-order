@@ -1,6 +1,47 @@
+<script setup>
+import { onBeforeUnmount, ref, watch } from 'vue';
+
+const props = defineProps({
+    initialSearch: {
+        type: String,
+        default: '',
+    },
+});
+const emit = defineEmits(['search']);
+const search = ref(props.initialSearch);
+let searchTimeout;
+
+const submitSearch = () => {
+    emit('search', search.value.trim());
+};
+
+const handleInput = () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(submitSearch, 500);
+};
+
+const clearSearch = () => {
+    search.value = '';
+    emit('search', '');
+};
+
+watch(
+    () => props.initialSearch,
+    (value) => {
+        search.value = value;
+    },
+);
+
+onBeforeUnmount(() => clearTimeout(searchTimeout));
+</script>
+
 <template>
     <div class="relative w-full px-2 sm:px-0">
-        <button class="absolute left-4 -translate-y-1/2 top-1/2 p-1">
+        <button
+            type="button"
+            class="absolute left-4 top-1/2 -translate-y-1/2 p-1"
+            @click="submitSearch"
+        >
             <svg
             width="17"
             height="16"
@@ -23,8 +64,15 @@
             class="w-full rounded-full border-2 border-transparent bg-white px-12 py-3 shadow-md transition-all duration-300 placeholder:text-gray-400 focus:border-shopee focus:outline-none focus:ring-0"
             placeholder="Search..."
             type="text"
+            v-model="search"
+            @input="handleInput"
+            @keyup.enter="submitSearch"
         />
-        <button type="reset" class="absolute right-4 -translate-y-1/2 top-1/2 p-1">
+        <button
+            type="button"
+            class="absolute right-4 top-1/2 -translate-y-1/2 p-1"
+            @click="clearSearch"
+        >
             <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-5 h-5 text-gray-700"

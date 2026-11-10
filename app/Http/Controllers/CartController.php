@@ -32,7 +32,7 @@ class CartController extends Controller
     {
         $cart = auth()->user()->cart()
             ->with([
-                'restaurant:id,name,address',
+                'restaurant:id,name,address,latitude,longitude',
                 'items.menu:id,name,price,image',
             ])
             ->first();
