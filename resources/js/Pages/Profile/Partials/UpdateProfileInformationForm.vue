@@ -19,6 +19,7 @@ const user = usePage().props.auth.user;
 const form = useForm({
     name: user.name,
     email: user.email,
+    phone: user.phone ?? '',
     image: null,
 });
 
@@ -82,7 +83,30 @@ const submit = () => {
             </div>
 
             <div>
+                <InputLabel for="phone" value="Phone Number" />
+
+                <TextInput
+                    id="phone"
+                    type="tel"
+                    class="mt-1 block w-full"
+                    v-model="form.phone"
+                    autocomplete="tel"
+                    maxlength="20"
+                    placeholder="Phone Number"
+                />
+
+                <InputError class="mt-2" :message="form.errors.phone" />
+            </div>
+
+            <div>
                 <InputLabel for="image" value="Profile image" />
+
+                <img
+                    v-if="user.image_url"
+                    :src="user.image_url"
+                    alt="Current profile image"
+                    class="mb-3 h-20 w-20 rounded-full object-cover"
+                />
                 
                 <label
                     for="image"

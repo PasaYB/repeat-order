@@ -40,6 +40,8 @@ class ProfileController extends Controller
             }
 
             $validated['image'] = $request->file('image')->store('profile-images', 'public');
+        } else {
+            unset($validated['image']);
         }
 
         $user->fill($validated);
