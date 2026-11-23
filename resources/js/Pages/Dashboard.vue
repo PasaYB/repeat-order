@@ -7,6 +7,7 @@ import SearchBar from '@/Components/SearchBar.vue';
 import StarRating from '@/Components/StarRating.vue';
 import LocationCard from '@/Components/LocationCard.vue';
 import { getGreeting } from '@/composables/greetings';
+import RestaurantGacha from '@/Components/RestaurantGacha.vue';
 
 const props = defineProps({
     categories: {
@@ -168,11 +169,7 @@ const filteredRestaurants = computed(() => {
                     </div>
 
                     <div class="flex w-full items-center justify-center md:w-1/2">
-                        <div
-                            class="flex aspect-square w-full max-w-xs items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 text-sm text-gray-400"
-                        >
-                            COMING SOON
-                        </div>
+                        <RestaurantGacha :restaurants="restaurants" />
                     </div>
                 </div>
             </div>
