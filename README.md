@@ -5,8 +5,8 @@
 | No. | Nama | NIM |
 |---|---|---|
 | 1 | Lanang Gading Pasa | 123250174 |
-| 2 | Nama Anggota 2 | NIM Anggota 2 |
-| 3 | Nama Anggota 3 | NIM Anggota 3 |
+| 2 | Indra Ramadhan | 123250129 |
+| 3 | Danang Nur Himawan | 123250222 |
 
 ---
 
