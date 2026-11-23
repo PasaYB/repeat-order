@@ -1,86 +1,138 @@
-## Cara Clone dan Menjalankan Proyek
+# SuJa
 
-### 1. Clone repository
+## Contributors
 
-Ganti URL berikut dengan URL repository proyek yang sebenarnya.
+| No. | Nama | NIM |
+|---|---|---|
+| 1 | Lanang Gading Pasa | 123250174 |
+| 2 | Nama Anggota 2 | NIM Anggota 2 |
+| 3 | Nama Anggota 3 | NIM Anggota 3 |
+
+---
+
+## Deskripsi
+
+**SuJa** adalah aplikasi pemesanan makanan berbasis web yang memungkinkan pengguna untuk menjelajahi restoran, melihat menu makanan, menambahkan makanan ke keranjang, dan melakukan pemesanan secara online.
+
+Project ini dikembangkan sebagai bagian dari tugas perkuliahan dengan menggunakan Laravel sebagai backend serta Vue.js dan Inertia.js sebagai frontend.
+
+## Fitur
+
+- Melihat daftar restoran dan kategori makanan.
+- Melihat detail restoran beserta menu yang tersedia.
+- Menambahkan dan mengelola menu di keranjang.
+- Melakukan checkout dan membuat pesanan.
+- Melihat riwayat serta detail pesanan.
+- Melihat lokasi restoran melalui peta.
+- Simulasi perubahan status pesanan.
+
+## Teknologi
+
+- **Backend:** Laravel
+- **Frontend:** Vue.js
+- **Bridge:** Inertia.js
+- **Styling:** Tailwind CSS
+- **Database:** MySQL
+- **Map:** Leaflet dan OpenStreetMap
+
+## Persyaratan
+
+Pastikan perangkat telah memiliki:
+
+- PHP sesuai persyaratan versi Laravel yang digunakan.
+- Composer
+- Node.js dan NPM
+- MySQL
+- Git
+
+## Instalasi
+
+### 1. Clone Repository
 
 ```bash
 git clone https://github.com/USERNAME/NAMA-REPOSITORY.git
 ```
 
-Masuk ke direktori proyek:
+Masuk ke direktori project:
 
 ```bash
 cd NAMA-REPOSITORY
 ```
 
-### 2. Instal dependensi
+### 2. Install Dependencies
 
-Instal dependensi PHP:
+Install dependency Laravel:
 
 ```bash
 composer install
 ```
 
-Instal dependensi frontend:
+Install dependency frontend:
 
 ```bash
 npm install
 ```
 
-### 3. Konfigurasi environment
+### 3. Konfigurasi Environment
 
-Salin file konfigurasi environment:
+Salin file `.env.example` menjadi `.env`:
 
 ```bash
 cp .env.example .env
 ```
 
-Buat application key Laravel:
+Generate application key:
 
 ```bash
 php artisan key:generate
 ```
 
-### 4. Konfigurasi database
+### 4. Konfigurasi Database
 
-Biarkan default menggunakan sqlite
+Buat database baru di MySQL, kemudian sesuaikan konfigurasi database pada file `.env`:
 
-### 5. Jalankan migration dan seeder
+```env
+DB_CONNECTION=sqlite
+```
 
-Jalankan perintah berikut untuk membuat tabel dan mengisi data awal jika seeder sudah tersedia:
+Sesuaikan nilai konfigurasi dengan database lokal yang digunakan.
+
+### 5. Migrasi dan Seeder
+
+Jalankan migrasi database beserta seeder:
 
 ```bash
 php artisan migrate --seed
 ```
 
-**Perhatian:** jangan gunakan `migrate:fresh` pada database yang berisi data penting karena perintah tersebut akan menghapus tabel sebelum membuatnya kembali.
+### 6. Jalankan Aplikasi
 
-### 6. Jalankan aplikasi
-
-Buka terminal pertama untuk menjalankan server Laravel:
+Jalankan server Laravel:
 
 ```bash
 php artisan serve
 ```
 
-Buka terminal kedua untuk menjalankan frontend:
+Jalankan development server frontend pada terminal terpisah:
 
 ```bash
 npm run dev
 ```
 
-Akses aplikasi melalui alamat:
+Buka aplikasi melalui browser:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-Biarkan kedua proses tetap berjalan selama pengembangan.
-
 ## Catatan
 
-- Pastikan layanan database aktif sebelum menjalankan migration.
-- Pastikan file `.env` sudah dikonfigurasi dengan benar.
-- Data restoran dan menu bergantung pada seeder yang tersedia di repository.
-- Jangan mengunggah file `.env` atau kredensial database ke repository publik.
+Pastikan server MySQL aktif sebelum menjalankan migrasi dan aplikasi. Untuk fitur simulasi perubahan status pesanan, jalankan Laravel Scheduler menggunakan perintah berikut pada terminal terpisah:
+
+```bash
+php artisan schedule:work
+```
+
+---
+
+**SuJa** — Web-based Food Ordering Application.
