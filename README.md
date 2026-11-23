@@ -78,3 +78,9 @@ http://127.0.0.1:8000
 
 Biarkan kedua proses tetap berjalan selama pengembangan.
 
+## Catatan
+
+- Pastikan layanan database aktif sebelum menjalankan migration.
+- Pastikan file `.env` sudah dikonfigurasi dengan benar.
+- Data restoran dan menu bergantung pada seeder yang tersedia di repository.
+- Jangan mengunggah file `.env` atau kredensial database ke repository publik.
