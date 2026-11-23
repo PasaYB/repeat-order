@@ -49,7 +49,7 @@ class OrderController extends Controller
             $subtotal = $cart->items->sum(
                 fn ($item) => (float) $item->menu->price * $item->quantity
             );
-            $tax = $subtotal * 0.11;
+            $tax = $subtotal * 0.12;
 
             $subtotal = $subtotal + $tax;
 

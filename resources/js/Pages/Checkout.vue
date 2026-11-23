@@ -68,7 +68,7 @@ const subtotal = computed(() =>
     ),
 );
 
-const tax = computed(() => subtotal.value * 0.11);
+const tax = computed(() => subtotal.value * 0.12);
 const total = computed(() => subtotal.value + tax.value + deliveryFee.value);
 const canSubmit = computed(
     () =>
@@ -316,7 +316,7 @@ watch(
                             </div>
                             <div class="flex justify-between gap-4 border-b border-gray-100 pb-3">
                                 <p class="font-medium text-gray-900">
-                                    PPn <span class="text-shopee">(11%)</span>
+                                    PPn <span class="text-shopee">(12%)</span>
                                 </p>
                                 <span class="font-medium text-gray-900">
                                     {{ formatPrice(tax) }}
