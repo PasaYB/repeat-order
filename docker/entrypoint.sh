@@ -9,6 +9,9 @@ fi
 DB_PATH="${DB_DATABASE:-/var/lib/laravel/database.sqlite}"
 DB_DIR="$(dirname "$DB_PATH")"
 
+export DB_CONNECTION="${DB_CONNECTION:-sqlite}"
+export DB_DATABASE="$DB_PATH"
+
 mkdir -p "$DB_DIR"
 if [ ! -f "$DB_PATH" ]; then
     touch "$DB_PATH"
